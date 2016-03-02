@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo starting with waltime = 6 hours:
+    qsub -I -l select=1:ncpus=6:mem=10gb:ngpus=1:gpu_model=k40,walltime=30:00:00
+else
+    echo starting with waltime = $1 hours:
+    qsub -I -l select=1:ncpus=6:mem=10gb:ngpus=1:gpu_model=k40,walltime=$1:00:00
+fi
+
+

@@ -1,0 +1,341 @@
+#!/bin/bash
+# Doug's installer
+
+if [ "$#" -lt 1 ]; then
+    echo "usage: dinstall <name>"
+    exit 1
+fi
+
+export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
+cores=${cores:-8}
+
+uninstall () {
+    echo "uninstalling $1"
+    if [ -a "$INSTALL_DIR/stow/$1" ]; then
+        echo "unstowing $1"
+        cd $INSTALL_DIR/stow
+        stow -D $1
+
+        echo "removing dir $1"
+        rm -rf $INSTALL_DIR/stow/$1
+    else
+        echo "not installed... nothing to do"
+    fi
+}
+
+install () {
+    echo "installing $1"
+    cd $INSTALL_DIR/stow
+    rm -f $1/share/info/dir
+    stow $1
+}
+
+
+if [ "$1" = "gcc" ]; then
+    uninstall gcc
+
+    cd $TMPDIR
+    mkdir gcc; cd gcc
+
+    wget http://mirrors-usa.go-parts.com/gcc/releases/gcc-4.8.2/gcc-4.8.2.tar.gz
+    tar xf gcc-4.8.2.tar.gz
+    mkdir gcc-4.8.2/build
+    cd gcc-4.8.2/build
+    ../configure --disable-multilib --prefix=$INSTALL_DIR/stow/gcc
+    make -j$cores
+    make 
+    make install
+    install gcc
+
+    cd $TMPDIR
+    rm -rf gcc
+fi
+
+
+
+if [ "$1" = "opencv" ]; then
+    uninstall opencv
+
+    cd $TMPDIR
+
+    git clone https://github.com/Itseez/opencv.git
+    cd opencv
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/opencv \
+        -DCMAKE_PREFIX_PATH=$INSTALL_DIR  -DBUILD_JPEG=ON \
+        -DBUILD_JASPER=ON -DBUILD_TIFF=ON -DWITH_IPP=OFF ..
+    make -j$cores
+    make install
+
+    install opencv
+
+    cd $TMPDIR
+    rm -rf opencv
+fi
+
+if [ "$1" = "leveldb" ]; then
+    uninstall leveldb
+
+    cd $TMPDIR
+    git clone https://github.com/google/leveldb.git
+    cd leveldb
+    sed -i -e 's/std::uint64_t/uint64_t/' db/recovery_test.cc
+    make -j$cores
+    mkdir -p $INSTALL_DIR/stow/leveldb/lib
+    mkdir -p $INSTALL_DIR/stow/leveldb/include
+    cp --preserve=links out-shared/libleveldb.* $INSTALL_DIR/stow/leveldb/lib
+    cp -r include/leveldb $INSTALL_DIR/stow/leveldb/include
+    cd ..
+
+    install leveldb
+
+    cd $TMPDIR
+    rm -rf leveldb
+fi
+
+
+if [ "$1" = "gflags" ]; then
+    uninstall gflags
+
+    cd $TMPDIR
+    git clone https://github.com/schuhschuh/gflags.git
+    mkdir gflags/build
+    cd gflags/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/gflags \
+       -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBUILD_SHARED_LIBS=ON ..
+    make -j$cores
+    make install
+
+    install gflags
+
+    cd $TMPDIR
+    rm -rf gflags
+fi
+
+if [ "$1" = "protobuf" ]; then
+    uninstall protobuf
+
+    cd $TMPDIR
+    git clone https://github.com/google/protobuf.git
+    cd protobuf
+    ./autogen.sh
+    ./configure --prefix=$INSTALL_DIR/stow/protobuf
+    make -j$cores
+    make install
+
+    install protobuf
+
+    cd $TMPDIR
+    rm -rf protobuf
+fi
+
+if [ "$1" = "glog" ]; then
+    uninstall glog
+
+    cd $TMPDIR
+    git clone https://github.com/google/glog.git
+    mkdir glog/build
+    cd glog/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/glog \
+       -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBUILD_SHARED_LIBS=ON ..
+    make -j$cores
+    make install
+
+    install glog
+
+    cd $TMPDIR
+    rm -rf glog
+fi
+
+if [ "$1" = "lmdb" ]; then
+    uninstall lmdb
+
+    cd $TMPDIR
+    git clone https://gitorious.org/mdb/mdb.git
+    cd mdb/libraries/liblmdb
+    sed -i -e "s|prefix.*=.*$|prefix = $INSTALL_DIR/stow/lmdb|" Makefile
+    mkdir -p $INSTALL_DIR/stow/lmdb/man
+    mkdir -p $INSTALL_DIR/stow/lmdb/bin
+    mkdir -p $INSTALL_DIR/stow/lmdb/include
+    mkdir -p $INSTALL_DIR/stow/lmdb/lib
+    make -j$cores
+    make install
+
+    install lmdb
+
+    cd $TMPDIR
+    rm -rf mdb
+fi
+
+if [ "$1" = "snappy" ]; then
+    uninstall snappy
+
+    cd $TMPDIR
+    git clone https://github.com/google/snappy.git
+    cd snappy
+    ./autogen.sh
+    ./configure --prefix=$INSTALL_DIR/stow/snappy
+    make -j$cores
+    make install
+
+    install snappy
+
+    cd $TMPDIR
+    rm -rf snappy
+fi
+
+if [ "$1" = "python27" ]; then
+    uninstall python27
+
+    cd $TMPDIR
+    mkdir python27; cd python27
+    wget https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz
+    tar -xf Python-2.7.11.tgz
+    cd Python-2.7.11
+    ./configure --prefix=$INSTALL_DIR/stow/python27 --enable-shared
+    make -j$cores
+    make install
+
+    install python27
+
+    cd $TMPDIR
+    wget https://bootstrap.pypa.io/ez_setup.py -O - | python - --user
+
+    rm -rf python27
+fi
+
+if [ "$1" = "numpy" ]; then
+    cd $TMPDIR
+    mkdir numpy; cd numpy
+
+    wget http://cython.org/release/Cython-0.23.4.tar.gz
+    tar -xf Cython-0.23.4.tar.gz
+    cd Cython-0.23.4
+    python setup.py install --user
+    cd ..
+
+
+    git clone git://github.com/numpy/numpy.git numpy
+    cd numpy
+    python setup.py install --user
+    cd ..
+
+    cd $TMPDIR
+    rm -rf numpy
+fi
+
+if [ "$1" = "boost" ]; then
+    uninstall boost
+
+    cd $TMPDIR
+    mkdir boost; cd boost
+    wget http://iweb.dl.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.gz
+    tar xf boost_1_60_0.tar.gz
+    cd boost_1_60_0
+
+    sed -i -e '156s/$/ \&\& !defined(__CUDACC__)/' boost/config/compiler/gcc.hpp
+    ./bootstrap.sh --prefix=$INSTALL_DIR/stow/boost
+    ./b2 -j$cores install
+
+    install boost
+
+    cd $TMPDIR
+    rm -rf boost
+fi
+
+if [ "$1" = "caffe" ]; then
+    uninstall caffe
+
+    cd $TMPDIR
+
+    git clone https://github.com/BVLC/caffe.git
+    mkdir caffe/build
+    cd caffe/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
+       -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBOOST_ROOT=$INSTALL_DIR \
+       -DBLAS=MKL -DINTEL_ROOT=/software/intel/composer_xe_2015 \
+       -DPYTHON_LIBRARY=$INSTALL_DIR/lib/libpython2.7.so \
+       -DPYTHON_INCLUDE_DIR=$INSTALL_DIR/include/python2.7 \
+       -DPROTOBUF_INCLUDE_DIR=$INSTALL_DIR/include \
+       -DPROTOBUF_LIBRARY=$INSTALL_DIR/lib/libprotobuf.so \
+       -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so ..
+    make -j$cores
+    make install
+
+    install caffe
+
+    cd $TMPDIR
+    rm -rf caffe
+fi
+
+
+if [ "$1" = "gdal" ]; then
+    uninstall gdal
+
+    cd $TMPDIR
+
+    mkdir gdal; cd gdal
+    wget http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz
+    tar xf gdal-2.0.2.tar.gz
+    cd gdal-2.0.2
+    ./configure --prefix=$INSTALL_DIR/stow/gdal
+    make -j$cores
+    make install
+
+    install gdal
+
+    cd $TMPDIR
+    rm -rf gdal
+fi
+
+if [ "$1" = "libpqxx" ]; then
+    uninstall libpqxx
+
+    cd $TMPDIR
+
+    mkdir libpqxx; cd libpqxx
+    wget http://pqxx.org/download/software/libpqxx/libpqxx-4.0.1.tar.gz
+    tar xf libpqxx-4.0.1.tar.gz
+    cd libpqxx-4.0.1
+    ./configure --prefix=$INSTALL_DIR/stow/libpqxx
+    make
+    make install
+
+    install libpqxx
+
+    cd $TMPDIR
+    rm -rf libpqxx
+fi
+
+
+if [ "$1" = "stow" ]; then
+    uninstall stow
+
+    cd $TMPDIR
+    mkdir stow; cd stow
+    wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+    tar xf stow-latest.tar.gz
+    cd stow-*
+    ./configure --prefix=$INSTALL_DIR
+    if [ $? -ne 0 ]; then
+        echo "Error"
+        echo "Try running:"
+        echo "  cpan App::cpanminus"
+        echo "  source ~/.bashrc"
+        echo "  cpanm Test::Output"
+        cd $TMPDIR
+        rm -rf stow
+        exit 1
+
+    fi
+    make
+    make install prefix=$INSTALL_DIR/stow/stow
+
+    cd $INSTALL_DIR/stow
+    export PERL5LIB=$INSTALL_DIR/stow/stow/share/perl5:$PERL5LIB
+    stow/bin/stow -vv stow
+
+    cd $TMPDIR
+    rm -rf stow
+fi
