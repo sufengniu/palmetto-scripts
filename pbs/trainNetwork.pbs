@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -N trainNetwork
+#PBS -l select=1:ncpus=1:mem=16gb:ngpus=1:gpu_model=k40,walltime=1:00:00
+#PBS -j oe
+#PBS -o reTrainNet.log
+
+echo "Starting stript!!"
+
+source pbs_common.sh
+
+cd $TMPDIR
+git clone dndawso@git.ces.clemson.edu:/git/pss-research/vehicleTracking.git
+mkdir vehicleTracking/build
+cd vehicleTracking/build
+
+cmake -DDATA_DIR=/scratch2/dndawso/data -DCAFFE_DIR=/scratch2/dndawso/etc/caffe ..
+make dataSetConversion
+
+util/dataSetConversion
+
+make trainNet
+
+exportResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.caffemodel"
+
+cd $TMPDIR
+rm -rf $TMPDIR/*
+
