@@ -1,3 +1,3 @@
 #!/bin/bash
-qsub -I -l select=1:ncpus=6:mem=8gb,walltime=6:00:00
+qsub -I -v cores=6 -l select=1:ncpus=6:mem=8gb,walltime=6:00:00
 
