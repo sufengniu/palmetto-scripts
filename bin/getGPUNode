@@ -7,4 +7,4 @@ else
     qsub -I -l select=1:ncpus=6:mem=10gb:ngpus=1:gpu_model=k40,walltime=$1:00:00
 fi
 
-
+export cores=6
