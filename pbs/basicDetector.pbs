@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -N us4_basicDetector
+#PBS -l select=1:ncpus=2:mem=10gb:ngpus=1:gpu_model=k40,walltime=4:00:00
+#PBS -j oe
+#PBS -o us4_basicDetector.log
+
+dataset=${dataset:-skycomp1}
+rect=${rect:-500 500 2000 2000}
+sz=${sz:-200}
+INSTALL_DIR=${INSTALL_DIR:-$HOME/usr/local}
+
+cmd=-r $rect -s $sz $dataset
+
+
+source $INSTALL_DIR/pbs/pbs_common.sh
+
+cd $TMPDIR
+git clone dndawso@git.ces.clemson.edu:/git/pss-research/vehicleTracking.git
+mkdir vehicleTracking/build
+cd vehicleTracking/build
+
+cmake -DDATA_DIR=/scratch2/dndawso/data -DCAFFE_DIR=$INSTALL_DIR \
+    -DBOOST_ROOT=$INSTALL_DIR -DBoost_NO_BOOST_CMAKE=ON -DLEVELDB_ROOT=$INSTALL_DIR \
+    -DUSE_MKL=ON  -DCMAKE_PREFIX_PATH=$INSTALL_DIR ..
+
+make basicDetector
+
+importResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.caffemodel"
+
+make buildNet
+
+util/basicDetector $cmd
+
+exportResults detections.pb
+
+
+cd $TMPDIR
+rm -rf $TMPDIR/*
+
