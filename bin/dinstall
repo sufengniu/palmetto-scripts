@@ -242,6 +242,17 @@ if [ "$1" = "ipdb" ]; then
     rm -rf ipdb
 fi
 
+if [ "$1" = "pip" ]; then
+    cd $TMPDIR
+    mkdir pip; cd pip
+
+    wget https://bootstrap.pypa.io/get-pip.py 
+    python get-pip.py
+
+    cd $TMPDIR
+    rm -rf pip
+fi
+
 if [ "$1" = "boost" ]; then
     uninstall boost
 
