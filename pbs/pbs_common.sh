@@ -1,6 +1,9 @@
-export RESULT_DIR=/home/dndawso/results
+export RESULT_DIR=$HOME/results
 export JOB_RESULT_DIR=$RESULT_DIR/pbs.${PBS_JOBID}
 mkdir $JOB_RESULT_DIR
+
+export INSTALL_DIR=${INSTALL_DIR:-$HOME/usr/local}
+export GDAL_ROOT=$INSTALL_DIR
 
 export gpuDev=$(qstat -f $PBS_JOBID | awk '/exec_vnode/ {
     match($0, /'`hostname`'\[([0-9]+)\]/, grp);
@@ -8,7 +11,7 @@ export gpuDev=$(qstat -f $PBS_JOBID | awk '/exec_vnode/ {
 }')
 
 echo "Using GPU: $gpuDev"
-/scratch2/dndawso/etc/caffe/bin/caffe device_query -gpu $gpuDev
+caffe device_query -gpu $gpuDev
 
 function importResults {
     for f in "$@"

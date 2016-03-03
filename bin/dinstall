@@ -126,6 +126,9 @@ if [ "$1" = "protobuf" ]; then
 
     install protobuf
 
+    cd $TMPDIR/protobuf/python
+    python setup.py install --user
+
     cd $TMPDIR
     rm -rf protobuf
 fi
@@ -223,6 +226,20 @@ if [ "$1" = "numpy" ]; then
 
     cd $TMPDIR
     rm -rf numpy
+fi
+
+if [ "$1" = "ipdb" ]; then
+    cd $TMPDIR
+    mkdir ipdb; cd ipdb
+
+    wget https://pypi.python.org/packages/source/i/ipdb/ipdb-0.9.0.tar.gz
+    tar xf ipdb-0.9.0.tar.gz
+    cd ipdb-0.9.0
+    python setup.py install --user
+    cd ..
+
+    cd $TMPDIR
+    rm -rf ipdb
 fi
 
 if [ "$1" = "boost" ]; then
