@@ -30,7 +30,7 @@ install () {
     stow $1
 }
 
-
+# caffe can't use 4.8.1, see: https://github.com/BVLC/caffe/issues/1398
 if [ "$1" = "gcc" ]; then
     uninstall gcc
 
@@ -80,7 +80,10 @@ if [ "$1" = "leveldb" ]; then
     cd $TMPDIR
     git clone https://github.com/google/leveldb.git
     cd leveldb
+    
+    #see https://github.com/google/leveldb/issues/340 :
     sed -i -e 's/std::uint64_t/uint64_t/' db/recovery_test.cc
+    
     make -j$cores
     mkdir -p $INSTALL_DIR/stow/leveldb/lib
     mkdir -p $INSTALL_DIR/stow/leveldb/include
@@ -262,7 +265,9 @@ if [ "$1" = "boost" ]; then
     tar xf boost_1_60_0.tar.gz
     cd boost_1_60_0
 
+    # See: https://svn.boost.org/trac/boost/ticket/11852
     sed -i -e '156s/$/ \&\& !defined(__CUDACC__)/' boost/config/compiler/gcc.hpp
+    
     ./bootstrap.sh --prefix=$INSTALL_DIR/stow/boost
     ./b2 -j$cores install
 
