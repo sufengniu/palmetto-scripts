@@ -9,7 +9,7 @@ rect=${rect:-500 500 2000 2000}
 sz=${sz:-200}
 INSTALL_DIR=${INSTALL_DIR:-$HOME/usr/local}
 
-cmd=-r $rect -s $sz $dataset
+cmd="-r $rect -s $sz $dataset"
 
 
 source $INSTALL_DIR/pbs/pbs_common.sh
