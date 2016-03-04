@@ -64,7 +64,7 @@ You are done with that CPU only interactive job:
 exit
 ```
 
-Install various libraries with dinstall (on a GPU node):
+Get an interactive GPU node and install various libraries using dinstall:
 ```bash
 getGPUNode
 dinstall gcc
