@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N us4_basicDetector
-#PBS -l select=1:ncpus=2:mem=10gb:ngpus=1:gpu_model=k40,walltime=5:00:00
+#PBS -N ubasicDetector
+#PBS -l select=1:ncpus=2:mem=10gb:ngpus=1:gpu_model=k40,walltime=6:00:00
 #PBS -j oe
-#PBS -o us4_basicDetector.log
+#PBS -o basicDetector.log
 
 dataset=${dataset:-skycomp1}
 x=500
