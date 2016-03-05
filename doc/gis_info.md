@@ -2,7 +2,7 @@
 1. Get OSM file.
 2. Create database:
   ```
-  psql -U user
+  psql
   
   CREATE DATABASE dbname;
   \c dbname
