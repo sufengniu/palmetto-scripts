@@ -85,6 +85,8 @@ dinstall snappy
 dinstall boost
 dinstall caffe
 dinstall gdal
+dinstall postgresql
+dinstall libpqxx
 ```
 
 
