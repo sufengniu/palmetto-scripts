@@ -51,6 +51,23 @@ if [ "$1" = "gcc" ]; then
     rm -rf gcc
 fi
 
+if [ "$1" = "cmake" ]; then
+    uninstall cmake
+    cd $TMPDIR
+    
+    wget https://cmake.org/files/v3.5/cmake-3.5.2.tar.gz    
+    tar xf cmake-3.5.2.tar.gz
+    cd cmake-3.5.2
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/cmake \
+        -DCMAKE_PREFIX_PATH=$INSTALL_DIR .
+    make -j$cores
+    make install
+
+    install cmake
+
+    cd $TMPDIR
+    rm -rf cmake-3.5.2
+fi
 
 
 if [ "$1" = "opencv" ]; then
