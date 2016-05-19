@@ -28,7 +28,7 @@ getCPUNode
 Decide where you want to install things.  I assume `~/usr/local`.
 Add info to `.bashrc`:
 ```bash
-module add cuda-toolkit/7.0.28 cmake/3.0.0-i130 gcc/4.8.1
+module add cuda-toolkit/7.0.28 gcc/4.8.1
 export PATH="$HOME/usr/local/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/usr/local/lib:$LD_LIBRARY_PATH"
 export LIBRARY_PATH="$HOME/usr/local/lib:$LIBRARY_PATH"
@@ -68,6 +68,7 @@ Get an interactive GPU node and install various libraries using dinstall:
 ```bash
 getGPUNode
 dinstall gcc
+dinstall cmake
 dinstall python27
 dinstall numpy
 dinstall pip
