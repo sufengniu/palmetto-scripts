@@ -1,14 +1,15 @@
 #!/bin/bash
 #PBS -N ubasicDetector
-#PBS -l select=1:ncpus=2:mem=10gb:ngpus=1:gpu_model=k40,walltime=6:00:00
+#PBS -l select=1:ncpus=2:mem=10gb:ngpus=1:gpu_model=k40,walltime=24:00:00
 #PBS -j oe
 #PBS -o basicDetector.log
 
 dataset=${dataset:-skycomp1}
-x=500
-y=500
-w=2000
-h=2000
+x=${x:-0}
+y=${y:-0}
+w=${w:-5000}
+h=${h:-3000}
+n=${n:-600}
 sz=${sz:-300}
 INSTALL_DIR=${INSTALL_DIR:-$HOME/usr/local}
 
@@ -30,7 +31,7 @@ importResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.c
 
 make buildNet
 
-util/basicDetector -r $x $y $w $h -s $sz $dataset
+util/basicDetector -r $x $y $w $h -s $sz -n $n $dataset
 
 exportResults detections.pb
 
