@@ -2,7 +2,7 @@
 #PBS -N incTrainNetwork
 #PBS -l select=1:ncpus=1:mem=16gb:ngpus=1:gpu_model=k40,walltime=4:00:00
 #PBS -j oe
-#PBS -o trainNet.log
+#PBS -o incTrainNet.log
 
 dataset=${dataset:-skycomp1}
 x=${x:-0}
@@ -33,6 +33,8 @@ if [ -f detections.pb ]; then
     detectionInfo="-d detections.pb"
 fi
 
+cp -r /scratch2/dndawso/skycomp1 .
+
 util/labeledDataToDB -l $dataset $detectionInfo -n negatives.yml -t "$trainFrames" -T "$testFrames"
 make trainNet
 
@@ -41,6 +43,6 @@ make buildNet
 util/basicDetector -r $x $y $w $h -s $sz -n $n $dataset
 
 make detectionAccuracy
-util/detectionAccuracy -l $dataset -d detections.pb -t "$trainFrames" -T "$testFrames"
+util/detectionAccuracy -l $dataset -d detections.pb -t "$trainFrames" -T "$testFrames" > accuracy.txt
 
-exportResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.caffemodel" "negatives.yml" "detections.pb"
+exportResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.caffemodel" "negatives.yml" "detections.pb" "accuracy.txt"
