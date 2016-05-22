@@ -400,7 +400,7 @@ if [ "$1" = "stow" ]; then
     make install prefix=$INSTALL_DIR/stow/stow
 
     cd $INSTALL_DIR/stow
-    export PERL5LIB=$INSTALL_DIR/stow/stow/share/perl5:$PERL5LIB
+    export PERL5LIB=$INSTALL_DIR/stow/stow/share/perl5:$INSTALL_DIR/stow/stow/share/perl/5.14.2:$PERL5LIB
     stow/bin/stow -vv stow
 
     cd $TMPDIR
