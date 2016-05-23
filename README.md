@@ -67,6 +67,7 @@ exit
 Get an interactive GPU node and install various libraries using dinstall:
 ```bash
 getGPUNode
+dinstall mpfr
 dinstall gcc
 dinstall cmake
 dinstall python27
