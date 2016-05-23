@@ -29,6 +29,7 @@ Decide where you want to install things.  I assume `~/usr/local`.
 Add info to `.bashrc`:
 ```bash
 module add cuda-toolkit/7.0.28 gcc/4.8.1
+export ACLOCAL_PATH="$HOME/usr/local/share/aclocal${ACLOCAL_PATH:+":$ACLOCAL_PATH"}"
 export PKG_CONFIG_PATH="$HOME/usr/local/lib/pkgconfig${PKG_CONFIG_PATH:+":$PKG_CONFIG_PATH"}"
 export PATH="$HOME/usr/local/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/usr/local/lib${LD_LIBRARY_PATH:+":$LD_LIBRARY_PATH"}"
