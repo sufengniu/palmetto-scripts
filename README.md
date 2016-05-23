@@ -74,7 +74,7 @@ dinstall python27
 dinstall numpy
 dinstall pip
 dinstall ipdb
-python -m pip install -U scipy
+python -m pip install -U scipy # you may need to do export LDFLAGS="-shared" before
 python -m pip install -U scikit-image
 dinstall opencv
 dinstall leveldb
