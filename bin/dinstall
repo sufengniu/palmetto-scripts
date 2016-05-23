@@ -6,6 +6,7 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
+export TMPDIR=${TMPDIR:-/tmp/dndawso}
 export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
 cores=${cores:-8}
 
@@ -51,6 +52,117 @@ if [ "$1" = "gcc" ]; then
     rm -rf gcc
 fi
 
+if [ "$1" = "hdf5" ]; then
+    uninstall hdf5
+
+    cd $TMPDIR
+    mkdir hdf5; cd hdf5
+
+    wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.17.tar.gz
+    tar xf hdf5-1.8.17.tar.gz
+    cd hdf5-1.8.17
+    
+    ./configure --prefix=$INSTALL_DIR/stow/hdf5
+    make -j$cores
+    make install
+
+    install hdf5
+
+    cd $TMPDIR
+    rm -rf hdf5
+fi
+
+if [ "$1" = "pkgconfig" ]; then
+    uninstall pkgconfig
+
+    cd $TMPDIR
+    mkdir pkgconfig; cd pkgconfig
+
+    wget --no-check-certificate https://pkg-config.freedesktop.org/releases/pkg-config-0.29.1.tar.gz 
+    tar xf pkg-config-0.29.1.tar.gz
+    cd pkg-config-0.29.1
+    ./configure --prefix=$INSTALL_DIR/stow/pkgconfig
+    make -j$cores
+    make install
+    install pkgconfig
+
+    cd $TMPDIR
+    rm -rf pkgconfig
+fi
+
+if [ "$1" = "libtool" ]; then
+    uninstall libtool
+
+    cd $TMPDIR
+    mkdir libtool; cd libtool
+
+    wget http://ftp.wayne.edu/gnu/libtool/libtool-2.4.3.tar.gz
+    tar xf libtool-2.4.3.tar.gz
+    cd libtool-2.4.3
+    ./configure --prefix=$INSTALL_DIR/stow/libtool
+    make -j$cores
+    make install
+    install libtool
+
+    cd $TMPDIR
+    rm -rf libtool
+fi
+
+if [ "$1" = "autoconf" ]; then
+    uninstall autoconf
+
+    cd $TMPDIR
+    mkdir autoconf; cd autoconf
+
+    wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+    tar xf autoconf-2.69.tar.gz
+    cd autoconf-2.69
+    ./configure --prefix=$INSTALL_DIR/stow/autoconf
+    make -j$cores
+    make install
+    install autoconf
+
+    cd $TMPDIR
+    rm -rf autoconf
+fi
+
+if [ "$1" = "automake" ]; then
+    uninstall automake
+
+    cd $TMPDIR
+    mkdir automake; cd automake
+
+    wget http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz 
+    tar xf automake-1.15.tar.gz
+    cd automake-1.15
+    ./configure --prefix=$INSTALL_DIR/stow/automake
+    make -j$cores
+    make install
+    install automake
+
+    cd $TMPDIR
+    rm -rf automake
+fi
+
+if [ "$1" = "freetype" ]; then
+    uninstall freetype
+
+    cd $TMPDIR
+    mkdir freetype; cd freetype
+
+    wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.12.tar.gz
+    tar xf freetype-2.4.12.tar.gz
+    cd freetype-2.4.12
+    export CC=gcc
+    ./configure --prefix=$INSTALL_DIR/stow/freetype
+    make -j$cores
+    make install
+    install freetype
+
+    cd $TMPDIR
+    rm -rf freetype
+fi
+
 if [ "$1" = "mpfr" ]; then
     uninstall mpfr
 
@@ -93,7 +205,7 @@ if [ "$1" = "cmake" ]; then
     uninstall cmake
     cd $TMPDIR
     
-    wget https://cmake.org/files/v3.5/cmake-3.5.2.tar.gz    
+    wget --no-check-certificate http://cmake.org/files/v3.5/cmake-3.5.2.tar.gz    
     tar xf cmake-3.5.2.tar.gz
     cd cmake-3.5.2
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/cmake \
@@ -230,8 +342,10 @@ if [ "$1" = "lmdb" ]; then
     uninstall lmdb
 
     cd $TMPDIR
-    git clone https://gitorious.org/mdb/mdb.git
-    cd mdb/libraries/liblmdb
+    # old:
+    #git clone https://gitorious.org/mdb/mdb.git
+    git clone https://github.com/wizawu/lmdb.git 
+    cd lmdb/libraries/liblmdb
     sed -i -e "s|prefix.*=.*$|prefix = $INSTALL_DIR/stow/lmdb|" Makefile
     mkdir -p $INSTALL_DIR/stow/lmdb/man
     mkdir -p $INSTALL_DIR/stow/lmdb/bin
@@ -243,7 +357,7 @@ if [ "$1" = "lmdb" ]; then
     install lmdb
 
     cd $TMPDIR
-    rm -rf mdb
+    rm -rf lmdb
 fi
 
 if [ "$1" = "snappy" ]; then
@@ -360,6 +474,30 @@ if [ "$1" = "caffe" ]; then
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
        -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBOOST_ROOT=$INSTALL_DIR \
        -DBLAS=MKL -DINTEL_ROOT=/software/intel/composer_xe_2015 \
+       -DPYTHON_LIBRARY=$INSTALL_DIR/lib/libpython2.7.so \
+       -DPYTHON_INCLUDE_DIR=$INSTALL_DIR/include/python2.7 \
+       -DPROTOBUF_INCLUDE_DIR=$INSTALL_DIR/include \
+       -DPROTOBUF_LIBRARY=$INSTALL_DIR/lib/libprotobuf.so \
+       -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so ..
+    make -j$cores
+    make install
+
+    install caffe
+
+    cd $TMPDIR
+    rm -rf caffe
+fi
+
+if [ "$1" = "caffe_ces" ]; then
+    uninstall caffe
+
+    cd $TMPDIR
+
+    git clone https://github.com/BVLC/caffe.git
+    mkdir caffe/build
+    cd caffe/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
+       -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBOOST_ROOT=$INSTALL_DIR \
        -DPYTHON_LIBRARY=$INSTALL_DIR/lib/libpython2.7.so \
        -DPYTHON_INCLUDE_DIR=$INSTALL_DIR/include/python2.7 \
        -DPROTOBUF_INCLUDE_DIR=$INSTALL_DIR/include \
