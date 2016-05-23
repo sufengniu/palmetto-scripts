@@ -41,7 +41,7 @@ if [ "$1" = "gcc" ]; then
     tar xf gcc-4.8.2.tar.gz
     mkdir gcc-4.8.2/build
     cd gcc-4.8.2/build
-    ../configure --disable-multilib --prefix=$INSTALL_DIR/stow/gcc
+    ../configure --disable-multilib --prefix=$INSTALL_DIR/stow/gcc --with-mpfr=$INSTALL_DIR
     make -j$cores
     make 
     make install
@@ -49,6 +49,44 @@ if [ "$1" = "gcc" ]; then
 
     cd $TMPDIR
     rm -rf gcc
+fi
+
+if [ "$1" = "mpfr" ]; then
+    uninstall mpfr
+
+    cd $TMPDIR
+    mkdir mpfr; cd mpfr
+
+    wget ftp://gcc.gnu.org/pub/gcc/infrastructure/mpfr-3.1.4.tar.bz2
+    tar xf mpfr-3.1.4.tar.bz2
+    cd mpfr-3.1.4
+    ./configure CFLAGS="-O2" CXXFLAGS="-O2" --prefix=$INSTALL_DIR/stow/mpfr
+    make -j$cores
+    make 
+    make install
+    install mpfr
+
+    cd $TMPDIR
+    rm -rf mpfr
+fi
+
+if [ "$1" = "mpc" ]; then
+    uninstall mpc
+
+    cd $TMPDIR
+    mkdir mpc; cd mpc
+
+    wget ftp://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.0.3.tar.gz
+    tar xf mpc-1.0.3.tar.gz
+    cd mpc-1.0.3
+    ./configure --with-mpfr=$INSTALL_DIR --prefix=$INSTALL_DIR/stow/mpc
+    make -j$cores
+    make 
+    make install
+    install mpc
+
+    cd $TMPDIR
+    rm -rf mpc
 fi
 
 if [ "$1" = "cmake" ]; then
