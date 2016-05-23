@@ -30,8 +30,8 @@ Add info to `.bashrc`:
 ```bash
 module add cuda-toolkit/7.0.28 gcc/4.8.1
 export PATH="$HOME/usr/local/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/usr/local/lib:$LD_LIBRARY_PATH"
-export LIBRARY_PATH="$HOME/usr/local/lib:$LIBRARY_PATH"
+export LD_LIBRARY_PATH="$HOME/usr/local/lib${LD_LIBRARY_PATH:+":$LD_LIBRARY_PATH"}"
+export LIBRARY_PATH="$HOME/usr/local/lib${LIBRARY_PATH:+":$LIBRARY_PATH"}"
 ```
 
 Get an interactive job:
