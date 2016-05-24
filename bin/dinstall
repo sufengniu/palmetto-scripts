@@ -52,6 +52,40 @@ if [ "$1" = "gcc" ]; then
     rm -rf gcc
 fi
 
+if [ "$1" = "atlas" ]; then
+    uninstall atlas
+
+    cd $TMPDIR
+    mkdir atlas; cd atlas
+
+    wget http://iweb.dl.sourceforge.net/project/math-atlas/Stable/3.10.2/atlas3.10.2.tar.bz2
+    wget http://www.netlib.org/lapack/lapack.tgz 
+    tar xf atlas3.10.2.tar.bz2
+    mkdir ATLAS/build
+    cd ATLAS/build
+    
+    sed -i -e 's/ThrChk = 1/ThrChk = 0/' ../CONFIG/src/config.c
+    ../configure -Fa alg -fPIC -b 64 --prefix=$INSTALL_DIR/stow/atlas --shared --with-netlib-lapack-tarfile=$TMPDIR/atlas/lapack.tgz
+    make
+    cd lib
+    make shared cshared ptshared cptshared
+    cd ..
+    make check
+    checkpass=$?
+    make ptcheck
+    ptcheckpass=$?
+    if [ $checkpass = 0 -a $ptcheckpass = 0 ]; then
+        make install
+        ln -s $INSTALL_DIR/stow/atlas/lib/liblapack.a $INSTALL_DIR/stow/atlas/lib/liblapack_atlas.a
+        ln -s $INSTALL_DIR/stow/atlas/lib/liblapack.so $INSTALL_DIR/stow/atlas/lib/liblapack_atlas.so
+        install atlas
+    else
+        echo "Check FAILED!!! not installing!"
+    fi
+    cd $TMPDIR
+    rm -rf atlas
+fi
+
 if [ "$1" = "hdf5" ]; then
     uninstall hdf5
 
@@ -496,13 +530,15 @@ if [ "$1" = "caffe_ces" ]; then
     git clone https://github.com/BVLC/caffe.git
     mkdir caffe/build
     cd caffe/build
+    export Atlas_ROOT_DIR=$INSTALL_DIR
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
        -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBOOST_ROOT=$INSTALL_DIR \
        -DPYTHON_LIBRARY=$INSTALL_DIR/lib/libpython2.7.so \
        -DPYTHON_INCLUDE_DIR=$INSTALL_DIR/include/python2.7 \
        -DPROTOBUF_INCLUDE_DIR=$INSTALL_DIR/include \
        -DPROTOBUF_LIBRARY=$INSTALL_DIR/lib/libprotobuf.so \
-       -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so ..
+       -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so \
+       -DCUDA_ARCH_NAME=Fermi ..
     make -j$cores
     make install
 
