@@ -75,7 +75,7 @@ dinstall python27
 dinstall numpy
 dinstall pip
 dinstall ipdb
-python -m pip install -U scipy # you may need to do export LDFLAGS="-shared" before
+python -m pip install -U scipy # you may need to do export LDFLAGS="-shared" before. If you do set LDFLAGS, clear it before opencv (and maybe even before the next line) with export LDFLAGS=""
 python -m pip install -U scikit-image
 dinstall opencv
 dinstall leveldb
