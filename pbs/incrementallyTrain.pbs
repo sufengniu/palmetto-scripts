@@ -14,6 +14,7 @@ trainFrames=${trainFrames:-"0 1 2 3 4 5 6 7 8 9"}
 n=${n:-20}
 sz=${sz:-300}
 INSTALL_DIR=${INSTALL_DIR:-$HOME/usr/local}
+iterations=${interations:-2000}
 
 source $INSTALL_DIR/pbs/pbs_common.sh
 
@@ -24,7 +25,7 @@ cd vehicleTracking/build
 
 cmake -DDATA_DIR=/scratch2/dndawso/data -DCAFFE_DIR=$INSTALL_DIR \
     -DBOOST_ROOT=$INSTALL_DIR -DBoost_NO_BOOST_CMAKE=ON -DLEVELDB_ROOT=$INSTALL_DIR \
-    -DUSE_MKL=ON  -DCMAKE_PREFIX_PATH=$INSTALL_DIR ..
+    -DUSE_MKL=ON  -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DTRAIN_ITERATIONS=$iterations ..
 
 make labeledDataToDB
 
@@ -46,4 +47,4 @@ util/basicDetector -r $x $y $w $h -s $sz -n $n $dataset
 make detectionAccuracy
 util/detectionAccuracy -l $dataset -d detections.pb -t "$trainFrames" -T "$testFrames" > accuracy.txt
 
-exportResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_5000.caffemodel" "negatives.yml" "detections.pb" "accuracy.txt"
+exportResults "src/caffe/mean.cvs" "src/caffe/vehicle_detector_train_iter_${iterations}.caffemodel" "negatives.yml" "detections.pb" "accuracy.txt"
