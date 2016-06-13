@@ -497,6 +497,23 @@ if [ "$1" = "boost" ]; then
     rm -rf boost
 fi
 
+if [ "$1" = "cudnn" ]; then
+    uninstall cudnn
+
+    cd $TMPDIR
+    mkdir $INSTALL_DIR/stow/cudnn
+    cp /home/wbgreen/cudnn-7.5-linux-x64-v5.0-ga.tgz .
+    tar -xzvf cudnn-7.5-linux-x64-v5.0-ga.tgz
+    
+    cd cuda
+    cp -r * $INSTALL_DIR/stow/cudnn
+
+    install cudnn
+
+    cd $TMPDIR
+    rm -rf cudnn
+fi
+
 if [ "$1" = "caffe" ]; then
     uninstall caffe
 
@@ -515,6 +532,41 @@ if [ "$1" = "caffe" ]; then
        -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so ..
     make -j$cores
     make install
+
+    install caffe
+
+    cd $TMPDIR
+    rm -rf caffe
+fi
+
+if [ "$1" = "caffe_cudnn" ]; then
+    uninstall caffe
+
+    cd $TMPDIR
+
+    git clone https://github.com/BVLC/caffe.git
+    mkdir caffe/build
+    cd caffe/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
+       -DCMAKE_PREFIX_PATH=$INSTALL_DIR -DBOOST_ROOT=$INSTALL_DIR \
+       -DBLAS=MKL -DINTEL_ROOT=/software/intel/composer_xe_2015 \
+       -DPYTHON_LIBRARY=$INSTALL_DIR/lib/libpython2.7.so \
+       -DPYTHON_INCLUDE_DIR=$INSTALL_DIR/include/python2.7 \
+       -DPROTOBUF_INCLUDE_DIR=$INSTALL_DIR/include \
+       -DPROTOBUF_LIBRARY=$INSTALL_DIR/lib/libprotobuf.so \
+       -DPROTOBUF_PROTOC_LIBRARY=$INSTALL_DIR/lib/libprotoc.so \
+       -DCUDNN_ROOT=$INSTALL_DIR ..
+    make -j$cores
+    make install
+	
+    cd ..
+    mkdir $INSTALL_DIR/stow/caffe/caffe
+    cp -r data/ $INSTALL_DIR/stow/caffe/caffe
+    cp -r models/ $INSTALL_DIR/stow/caffe/caffe
+    cp -r examples/ $INSTALL_DIR/stow/caffe/caffe
+    cp -r tools/ $INSTALL_DIR/stow/caffe/caffe
+    cp -r scripts/ $INSTALL_DIR/stow/caffe/caffe
+    cd build
 
     install caffe
 
