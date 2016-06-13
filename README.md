@@ -23,6 +23,13 @@ or
 getCPUNode
 ```
 
+# Auto fresh install: (partiall tested)
+
+run:
+```
+bash <(curl -s https://raw.githubusercontent.com/dougnd/palmetto-scripts/master/bin/installCaffe.sh)
+```
+
 # Fresh install: (not fully tested)
 
 Decide where you want to install things.  I assume `~/usr/local`.
