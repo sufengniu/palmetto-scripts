@@ -1,0 +1,11 @@
+#!/bin/bash
+#PBS -N setupPrereqs
+#PBS -l walltime=1:00:00
+
+cpan App::cpanminus
+source ~/.bashrc
+cpanm Test::Output
+
+cd ~/usr/local/stow
+palmetto-scripts/bin/dinstall stow
+stow palmetto-scripts
