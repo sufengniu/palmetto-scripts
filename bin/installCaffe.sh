@@ -12,7 +12,8 @@ export ACLOCAL_PATH=\"\$HOME/usr/local/share/aclocal\${ACLOCAL_PATH:+\":\$ACLOCA
 export PKG_CONFIG_PATH=\"\$HOME/usr/local/lib/pkgconfig\${PKG_CONFIG_PATH:+\":\$PKG_CONFIG_PATH\"}\"\n\
 export PATH=\"\$HOME/usr/local/bin:\$PATH\"\n\
 export LD_LIBRARY_PATH=\"\$HOME/usr/local/lib64:\$HOME/usr/local/lib\${LD_LIBRARY_PATH:+\":\$LD_LIBRARY_PATH\"}\"\n\
-export LIBRARY_PATH=\"\$HOME/usr/local/lib\${LIBRARY_PATH:+\":\$LIBRARY_PATH\"}\"\n\
+export LIBRARY_PATH=\"\$HOME/usr/local/lib64:\$HOME/usr/local/lib\${LIBRARY_PATH:+\":\$LIBRARY_PATH\"}\"\n\
+export PYTHONPATH=\"\$HOME/usr/local/python\${PYTHONPATH:+\":\$PYTHONPATH\"}\"\n\
 \n#Needed for Auto-Perl Exec\n\
 export PERL_MM_USE_DEFAULT=1" >> ~/.bashrc
 
