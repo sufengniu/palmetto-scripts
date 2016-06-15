@@ -435,12 +435,7 @@ if [ "$1" = "numpy" ]; then
     cd $TMPDIR
     mkdir numpy; cd numpy
 
-    wget http://cython.org/release/Cython-0.23.4.tar.gz
-    tar -xf Cython-0.23.4.tar.gz
-    cd Cython-0.23.4
-    python setup.py install --user
-    cd ..
-
+    python -m pip install -U cython
 
     git clone git://github.com/numpy/numpy.git numpy
     cd numpy
