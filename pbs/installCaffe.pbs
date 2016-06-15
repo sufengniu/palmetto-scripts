@@ -5,8 +5,8 @@
 dinstall gcc
 dinstall cmake
 dinstall python27
-dinstall numpy
 dinstall pip
+dinstall numpy
 dinstall ipdb
 
 export LDFLAGS="-shared"
