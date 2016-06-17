@@ -634,6 +634,35 @@ if [ "$1" = "libpqxx" ]; then
     rm -rf libpqxx
 fi
 
+if [ "$1" = "bazel" ]; then
+    uninstall bazel
+
+    cd $TMPDIR
+    module add java/1.8.0
+
+    mkdir tmpbin
+    cat > tmpbin/gcc <<- EOF
+#!/bin/bash
+export LD_LIBRARY_PATH=$INSTALL_DIR/lib64:$INSTALL_DIR/lib:/software/gcc/4.8.1/lib64:/software/mpc/0.8.1/lib:/software/mpfr/2.4.2/lib:/software/gmp/4.3.2/lib:/usr/lib64/nvidia:/software/cuda-toolkit/7.5.18/lib64:/software/cuda-toolkit/7.5.18/lib:/software/cuda-toolkit/7.5.18/open64/lib:/usr/lib/nvidia:/opt/orangefs/lib:/opt/mx/lib 
+$INSTALL_DIR/stow/gcc/bin/gcc "\$@"
+EOF
+    chmod +x tmpbin/gcc
+
+    git clone https://github.com/dougnd/bazel.git
+    cd bazel
+    PATH=$TMPDIR/tmpbin:$PATH ./compile.sh
+
+    mkdir -p $INSTALL_DIR/stow/bazel/bin
+    cp output/bazel $INSTALL_DIR/stow/bazel/bin/
+
+
+    install bazel
+
+    cd $TMPDIR
+    rm -rf bazel
+    rm -rf tmpbin
+fi
+
 
 if [ "$1" = "stow" ]; then
     uninstall stow
