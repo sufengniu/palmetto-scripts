@@ -664,7 +664,7 @@ EOF
 fi
 
 if [ "$1" = "tensorflow" ]; then
-    python -m pip uninstall tensorflow
+    python -m pip uninstall -y tensorflow
 
     cd $TMPDIR
     module add java/1.8.0
