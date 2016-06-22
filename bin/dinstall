@@ -573,6 +573,9 @@ if [ "$1" = "caffe_rcnn" ]; then
    uninstall caffe
    uninstall py-faster-rcnn
 
+   python -m pip install pyyaml
+   python -m pip install easydict
+
    cd $TMPDIR
 
    git clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git
