@@ -8,6 +8,7 @@ export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
 cores=${cores:-8}
 
 
+#############################################################################
 # utility functions:
 unstow () {
     cd $INSTALL_DIR/stow
@@ -39,8 +40,13 @@ is_installed () {
 require_packages () {
     while [[ $# > 0 ]]; do
         if ! is_installed $1 ; then
-            echo "Package $1 is required! Install it first."
-            return 1
+            echo "Package $1 is required! Attempting install..."
+            # TODO: fix possible infinite loop with cyclical dependencies
+            install $1
+            if ! is_installed $1 ; then
+                echo "Package $1 is required! Failed to install!"
+                return 1
+            fi
         fi
         shift
     done
@@ -95,6 +101,21 @@ upgrade () {
     install $1
 }
 
+process_packages () {
+    cmd=$1
+    if [ $HOSTNAME = "user001" ]; then
+        echo "Warning! you are on user node!!"
+    fi
+
+    shift
+    while [[ $# > 0 ]]; do
+        $cmd $1
+        shift
+    done
+}
+
+#############################################################################
+# process dinstall arguments: 
 if [ "$#" -lt 1 ]; then
     echo "Not enough arguments!"
     print_usage
@@ -119,24 +140,15 @@ fi
 
 case "$1" in
     install|uninstall|upgrade)
-        cmd=$1
-        if [ $HOSTNAME = "user001" ]; then
-            echo "Warning! you are on user node!!"
-        fi
-
-        shift
-        while [[ $# > 0 ]]; do
-            $cmd $1
-            shift
-        done
+        process_packages $@
         exit 0
-        ;;
+    ;;
 esac
 
 
-echo "Error, unhandled command."
-print_usage
-exit 1
+# otherwise, assume install command:
+process_packages install $@
+exit 0
 
 
 
