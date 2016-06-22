@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N caffeSetup
-#PBS -l select=1:ncpus=6:mem=10gb:ngpus=1:gpu_model=k40,walltime=6:00:00
+#PBS -l select=1:ncpus=6:mem=10gb:chip_type=e5-2680v3|E5-2670v2,walltime=6:00:00
 
 dinstall gcc
 dinstall cmake
