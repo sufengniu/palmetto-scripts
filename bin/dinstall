@@ -581,16 +581,16 @@ if [ "$1" = "caffe_rcnn" ]; then
    git clone --recursive https://github.com/rbgirshick/py-faster-rcnn.git
    cd py-faster-rcnn/lib
    make
-
-   mkdir $INSTALL_DIR/stow/py-faster-rcnn/py-faster-rcnn/
+   
+   mkdir -p $INSTALL_DIR/stow/py-faster-rcnn
    cd ..
 
    ./data/scripts/fetch_faster_rcnn_models.sh
 
-   cp -r data/ $INSTALL_DIR/stow/py-faster-rcnn/py-faster-rcnn/   
-   cp -r experiments/ $INSTALL_DIR/stow/py-faster-rcnn/py-faster-rcnn/
-   cp -r models/ $INSTALL_DIR/stow/py-faster-rcnn/py-faster-rcnn/
-   cp -r tools/ $INSTALL_DIR/stow/py-faster-rcnn/py-faster-rcnn/
+   cp -r data/ $INSTALL_DIR/stow/py-faster-rcnn/   
+   cp -r experiments/ $INSTALL_DIR/stow/py-faster-rcnn/
+   cp -r models/ $INSTALL_DIR/stow/py-faster-rcnn/
+   cp -r tools/ $INSTALL_DIR/stow/py-faster-rcnn/
    cp -r lib $INSTALL_DIR/stow/py-faster-rcnn/
 
    cd caffe-fast-rcnn/
