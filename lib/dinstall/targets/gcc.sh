@@ -2,13 +2,17 @@
 
 # returns true if gcc is installed
 is_installed_gcc () {
-    return is_stowed gcc
+    is_stowed gcc
 }
 
-
-# will exit with error if dependencies are not met
-check_dependencies_gcc () {
-    return
+# will exit with error if dependencies are not met 
+# (0 means dependencies met, 1 means not met)
+dependencies_satisfied_gcc () {
+    if [ $HOSTNAME = "user001" ]; then
+        echo "Cannot install gcc while on the user node. try getGPULikeNode first!"
+        return 1
+    fi
+    return 0
 }
 
 uninstall_gcc () {
