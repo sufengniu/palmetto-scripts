@@ -591,6 +591,10 @@ if [ "$1" = "caffe_rcnn" ]; then
    cp -r lib $INSTALL_DIR/stow/py-faster-rcnn/
 
    cd caffe-fast-rcnn/
+   # allow the use of boost 1.60: see https://github.com/BVLC/caffe/pull/3575
+   git remote add upstream https://github.com/BVLC/caffe.git
+   git fetch upstream
+   git cherry-pick de31e034e5570056666d161ce10078011b0f1601
    mkdir build
    cd build
    cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/stow/caffe \
