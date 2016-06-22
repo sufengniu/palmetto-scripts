@@ -1,10 +1,57 @@
 #!/bin/bash
 # Doug's installer
 
+export TMPDIR=${TMPDIR:-/tmp/dndawso}
+export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
+cores=${cores:-8}
+
+
+# utility functions:
+unstow () {
+    cd $INSTALL_DIR/stow
+    stow -D $1
+    rm -rf $INSTALL_DIR/stow/$1
+}
+
+dostow () {
+    cd $INSTALL_DIR/stow
+    rm -f $1/share/info/dir
+    stow $1
+}
+
+is_stowed () {
+    return test -d $INSTALL_DIR/stow/$1
+}
+
+print_usage () {
+    echo -e "usage: dinstall <cmd> [<args>]"
+    echo -e "for cmd = install, upgrade, or remove:"
+    echo -e "\tdinstall <cmd> <name1> [<name2> ...]"
+    echo -e "\tinstalls, upgrades or removes packages named name1, name2, etc"
+    echo -e "for cmd = update"
+    echo -e "\tdinstall update"
+    echo -e "\tupdates palmetto scripts (and thus dinstall)"
+}
+
 if [ "$#" -lt 1 ]; then
-    echo "usage: dinstall <name>"
+    echo "Not enough arguments!"
+    print_usage
     exit 1
 fi
+
+if [ "$1" = "update" ]; then
+    if [ "$1" -ne 1 ]; then
+        echo "Wrong arguments!"
+        print_usage
+        exit 1
+    fi
+    cd $INSTALL_DIR/stow/palmetto_scripts
+    git pull
+fi
+
+
+exit 0
+
 
 export TMPDIR=${TMPDIR:-/tmp/dndawso}
 export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
