@@ -1,9 +1,9 @@
 #!/bin/bash
 if [ -z "$1" ]; then
     echo starting with waltime = 6 hours:
-    qsub -I -v cores=6 -l select=1:ncpus=6:mem=10gb:chip_type=e5-2680v3|E5-2670v2,walltime=6:00:00
+    qsub -I -v cores=6 -l select=1:ncpus=6:mem=10gb:chip_type=e5-2680v3,walltime=6:00:00
 else
     echo starting with waltime = $1 hours:
-    qsub -I -v cores=6 -l select=1:ncpus=6:mem=10gb:chip_type=e5-2680v3|E5-2670v2,walltime=$1:00:00
+    qsub -I -v cores=6 -l select=1:ncpus=6:mem=10gb:chip_type=e5-2680v3,walltime=$1:00:00
 fi
 
