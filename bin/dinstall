@@ -105,13 +105,18 @@ install () {
         if binary_available_$1 ; then 
             echo "Installing from binary!"
             binary_install_$1
+            # force bash to rethink about the path: (not sure why this is needed, but it is)
+            export PATH=$PATH
             return
         fi
 
         echo "Installing from binary is capable but not available. Ask Doug to deploy."
         echo "Until then, making from scratch..."
     fi
+    #( export PATH=$PATH;  install_$1 )
     install_$1
+    # force bash to rethink about the path: (not sure why this is needed, but it is)
+    export PATH=$PATH
 }
 
 
