@@ -235,8 +235,8 @@ if [ "$1" = "update" ]; then
         exit 1
     fi
     cd $INSTALL_DIR/stow/palmetto-scripts
-    git pull
     git checkout master
+    git pull
     cd $INSTALL_DIR/stow
     stow palmetto-scripts
     exit 0
