@@ -3,8 +3,39 @@
 Some scripts and tools to help me manage my programs on the Palmetto Cluster
 
 ## Installation:
+
+### Initialization:
+do this first to install the palmetto-scripts (takes ~5 minutes to run). You only have to do this once.
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/dougnd/palmetto-scripts/v2/bin/basicSetup.sh)
+```
+
+### Install tensorflow:
+```bash
+getGPULikeNode  # get a node for installation purposes
+dinstall tensorflow
+exit # leave the node
+```
+
+### Test tensorflow:
+```bash
+qsub -I -l select=1:ncpus=1:mem=10gb:ngpus=2:gpu_model=k40,walltime=0:30:00
+
+cd $TMPDIR
+wget https://github.com/tensorflow/tensorflow/tarball/master # may have to try this more than once
+tar xf master
+cd tensorflow-tensorflow-*/tensorflow/models/image/mnist
+python convolutional.py
+
+exit # leave the node
+```
+Note: the following was added to the palmetto MOTD: "Jobs that request gpus but don't use them may be terminated without notice."  Make sure if you are request a gpu, you actually are using it.  You may want to develop on a local machine and deploy to palmetto once you know it works.
+
+### Install caffe:
+```bash
+getGPULikeNode  # get a node for installation purposes
+dinstall caffe_cudnn
+exit # leave the node
 ```
 
 ## Usage:
