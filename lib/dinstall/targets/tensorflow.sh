@@ -10,7 +10,7 @@ dependencies_satisfied_tensorflow () {
         echo "Cannot install tensorflow while on the user node. try getGPULikeNode first!"
         return 1
     fi
-    require_packages gcc bazel python27 numpy scipy pip
+    require_packages gcc bazel python27 numpy scipy pip cudnn
 }
 
 uninstall_tensorflow () {
