@@ -8,6 +8,9 @@ export INSTALL_DIR=${INSTALL_DIR:-~/usr/local}
 cores=${cores:-8}
 
 
+binary_path=${binary_path:-/scratch2/dndawso/dinstall_binaries}
+
+
 #############################################################################
 # utility functions:
 unstow () {
@@ -53,6 +56,22 @@ require_packages () {
     return 0
 }
 
+binary_deploy_stow () {
+    cd $INSTALL_DIR/stow
+    tar -czvf $binary_path/${1}.tar.gz $1
+}
+
+binary_install_stow () {
+    cd $INSTALL_DIR/stow
+    tar -xvf $binary_path/${1}.tar.gz
+    dostow $1
+}
+
+binary_available_stow () {
+    test -f $binary_path/${1}.tar.gz
+}
+
+
 print_usage () {
     echo -e "usage: dinstall <cmd> [<args>]"
     echo -e "for cmd = install, upgrade, or remove:"
@@ -80,8 +99,21 @@ install () {
         echo "Error: dependencies not satisfied for $1!"
         return
     fi
+
+    # if the binary_available function exists then we check for binary
+    if type -t binary_available_$1 &> /dev/null ; then
+        if binary_available_$1 ; then 
+            echo "Installing from binary!"
+            binary_install_$1
+            return
+        fi
+
+        echo "Installing from binary is capable but not available. Ask Doug to deploy."
+        echo "Until then, making from scratch..."
+    fi
     install_$1
 }
+
 
 uninstall () {
     if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
@@ -99,6 +131,22 @@ uninstall () {
 upgrade () {
     uninstall $1
     install $1
+}
+
+deploy () {
+    if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
+        echo "Error: package $1 does not exist!"
+        return
+    fi
+    source $INSTALL_DIR/lib/dinstall/targets/${1}.sh
+    if type -t binary_available_$1 &> /dev/null ; then
+        if [ ! -d $binary_path ]; then
+            mkdir -p $binary_path
+        fi
+        binary_deploy_$1
+    else
+        echo "Error: $1 is not capable of binary deploy!"
+    fi
 }
 
 process_packages () {
@@ -139,7 +187,7 @@ fi
 
 
 case "$1" in
-    install|uninstall|upgrade)
+    install|uninstall|upgrade|deploy)
         process_packages $@
         exit 0
     ;;

@@ -32,7 +32,7 @@ install_python27 () {
     make -j$cores
     make install
 
-    install python27
+    dostow python27
 
     cd $TMPDIR
     wget https://bootstrap.pypa.io/ez_setup.py -O - | python - --user
@@ -40,3 +40,15 @@ install_python27 () {
     rm -rf python27
 }
 
+binary_deploy_python27 () {
+    binary_deploy_stow python27
+}
+binary_install_python27 () {
+    binary_install_stow python27
+
+    cd $TMPDIR
+    wget https://bootstrap.pypa.io/ez_setup.py -O - | python - --user
+}
+binary_available_python27 () {
+    binary_available_stow python27
+}

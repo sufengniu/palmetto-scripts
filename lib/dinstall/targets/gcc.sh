@@ -36,3 +36,13 @@ install_gcc () {
     cd $TMPDIR
     rm -rf gcc
 }
+
+binary_deploy_gcc () {
+    binary_deploy_stow gcc
+}
+binary_install_gcc () {
+    binary_install_stow gcc
+}
+binary_available_gcc () {
+    binary_available_stow gcc
+}

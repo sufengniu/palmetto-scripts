@@ -33,3 +33,13 @@ install_cmake () {
     cd $TMPDIR
     rm -rf cmake-3.5.2
 }
+
+binary_deploy_cmake () {
+    binary_deploy_stow cmake
+}
+binary_install_cmake () {
+    binary_install_stow cmake
+}
+binary_available_cmake () {
+    binary_available_stow cmake
+}
