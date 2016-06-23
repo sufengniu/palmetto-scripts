@@ -2,8 +2,32 @@
 
 Some scripts and tools to help me manage my programs on the Palmetto Cluster
 
+## Installation:
+```bash
+bash <(curl -s https://raw.githubusercontent.com/dougnd/palmetto-scripts/v2/bin/basicSetup.sh)
+```
 
-# Usage:
+## Usage:
+
+```bash
+dinstall <command> [arguments]
+```
+Command can be one of the following:
+- `update`  updates dinstall and palmetto-scripts (pulls from github).
+- `install` installs packages and their dependencies.  Multiple packages can be supplied.
+    e.g.: `dinstall install caffe_cudnn tensorflow  # installs caffe and tensorflow as well as all thier dependencies`
+- `uninstall` removes packages.   Multiple packages can be supplied.
+- `upgrade` upgrades packages.   Multiple packages can be supplied.
+
+
+Also available are some commands:
+- `getCPUNode` gets a node (6 cores, 10GB, 6 hr)
+- `getGPUNode` gets a GPU node with a k40 (6 cores, 10GB, 6 hr)
+- `getGPULikeNode` gets a node without a GPU, but the same architecture (6 cores, 10GB, 6 hr)
+
+
+
+## OLD STUFF BELOW:
 
 ## dinstall
 
