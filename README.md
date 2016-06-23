@@ -40,25 +40,35 @@ exit # leave the node
 
 ## Usage:
 
+### dinstall
 ```bash
-dinstall <command> [arguments]
+dinstall [<options>...] <command> [<packages>...]
 ```
 Command can be one of the following:
-- `update`  updates dinstall and palmetto-scripts (pulls from github).
-- `install` installs packages and their dependencies.  Multiple packages can be supplied.
-    e.g.: `dinstall install caffe_cudnn tensorflow  # installs caffe and tensorflow as well as all thier dependencies`
-- `uninstall` removes packages.   Multiple packages can be supplied.
-- `upgrade` upgrades packages.   Multiple packages can be supplied.
+- `update` - updates dinstall and palmetto-scripts (pulls from github).
+- `install` - installs packages and their dependencies.  Multiple packages can be supplied.  
+    e.g.: `dinstall install caffe_cudnn tensorflow`  (installs caffe and tensorflow as well as all thier dependencies)
+- `uninstall` - removes packages.   Multiple packages can be supplied.
+- `upgrade` - upgrades packages.   Multiple packages can be supplied.
+- `list` - lists available packages.
+- `list installed` - lists installed packages.
+
+Options
+- `--help` prints basic usage information.
+- `--version` prints version information.
+- `--ignore-binaries` installs from source, ignoring available binaries.
 
 
-Also available are some commands:
+
+### Other commands
 - `getCPUNode` gets a node (6 cores, 10GB, 6 hr)
 - `getGPUNode` gets a GPU node with a k40 (6 cores, 10GB, 6 hr)
 - `getGPULikeNode` gets a node without a GPU, but the same architecture (6 cores, 10GB, 6 hr)
 
 
 
-## OLD STUFF BELOW:
+
+# OLD STUFF BELOW:
 
 ## dinstall
 
