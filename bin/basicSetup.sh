@@ -17,6 +17,7 @@ cd $INSTALL_DIR/stow/
 git clone https://github.com/dougnd/palmetto-scripts.git
 cd palmetto-scripts
 git checkout v2
+cd ..
 
 
 printf "#Added for Caffe\n\
