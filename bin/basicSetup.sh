@@ -21,14 +21,14 @@ git checkout v2
 
 printf "#Added for Caffe\n\
 export INSTALL_DIR=$INSTALL_DIR\n\
-source $INSTALL_DIR/stow/palmetto-script/env_vars.sh\n\
+source $INSTALL_DIR/stow/palmetto-scripts/env_vars.sh\n\
 " >> ~/.bashrc
 
 echo "Starting a job to install some initial software..."
 JOB_ID=$(qsub  $INSTALL_DIR/stow/palmetto-scripts/pbs/setupPrereqs.pbs)
-echo "Waiting for it to finish..."
+echo "Waiting for it to finish... (this may take quite some time)"
 while [ -n "$(qstat | grep $JOB_ID)" ]; do
-    sleep 10
+    sleep 20
 done
 
 echo "done."
