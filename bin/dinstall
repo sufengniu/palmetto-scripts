@@ -9,6 +9,7 @@ cores=${cores:-8}
 
 
 binary_path=${binary_path:-/scratch2/dndawso/dinstall_binaries}
+ignore_binary=0
 
 
 #############################################################################
@@ -73,13 +74,17 @@ binary_available_stow () {
 
 
 print_usage () {
-    echo -e "usage: dinstall <cmd> [<args>]"
+    echo -e "usage: dinstall [<options>] <cmd> [<args>]"
     echo -e "for cmd = install, upgrade, or remove:"
     echo -e "\tdinstall <cmd> <name1> [<name2> ...]"
     echo -e "\tinstalls, upgrades or removes packages named name1, name2, etc"
     echo -e "for cmd = update"
     echo -e "\tdinstall update"
     echo -e "\tupdates palmetto scripts (and thus dinstall)"
+    echo -e "options:"
+    echo -e "\t--version : return current version and quits"
+    echo -e "\t--help : prints this message and quits"
+    echo -e "\t--ignore-binaries : ignores binaries, always installs from source"
 }
 
 
@@ -101,7 +106,7 @@ install () {
     fi
 
     # if the binary_available function exists then we check for binary
-    if type -t binary_available_$1 &> /dev/null ; then
+    if type -t binary_available_$1 &> /dev/null && [ $ignore_binary -eq 0 ]; then
         if binary_available_$1 ; then 
             echo "Installing from binary!"
             binary_install_$1
@@ -187,6 +192,33 @@ do_list () {
         echo ${pkgs[@]}
     fi
 }
+
+#############################################################################
+# Process Options:
+
+while [ "${1:0:2}" = "--" ]; do
+    case $1 in
+        --version)
+            cd $INSTALL_DIR/stow/palmetto-scripts
+            echo "version 2.0, git: $(git rev-parse --short HEAD)"
+            exit 0
+            ;;
+        --ignore-binaries)
+            echo "Ignoring binaries!!"
+            ignore_binary=1
+            ;;
+        --help)
+            print_usage
+            exit 0
+            ;;
+        *)
+            echo "Error unknown option: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
 
 #############################################################################
 # process dinstall arguments: 
