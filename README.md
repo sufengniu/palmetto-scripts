@@ -23,8 +23,18 @@ or
 getCPUNode
 ```
 
-# Auto fresh install: (partially tested)
+# Auto fresh install: Version 2
+run:
+```
+bash <(curl -s https://raw.githubusercontent.com/dougnd/palmetto-scripts/v2/bin/basicSetup.sh)
+```
+Then (after logout/login or `source ~/.bashrc`),
+```
+getGPULikeNode
+dinstall caffe_cudnn  # or whatever, dependencies are automatically resolved.
+```
 
+# Auto fresh install: Depreciated
 run:
 ```
 bash <(curl -s https://raw.githubusercontent.com/dougnd/palmetto-scripts/master/bin/installCaffe.sh)
