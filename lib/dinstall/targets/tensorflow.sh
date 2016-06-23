@@ -100,7 +100,6 @@ binary_deploy_tensorflow () {
     cp $INSTALL_DIR/stow/tensorflow_pkg/tensorflow-*.whl $binary_path
 }
 binary_install_tensorflow () {
-    binary_install_stow tensorflow
     mkdir -p $INSTALL_DIR/stow/tensorflow_pkg
     cp $binary_path/tensorflow-*.whl $INSTALL_DIR/stow/tensorflow_pkg
     python -m pip install $INSTALL_DIR/stow/tensorflow_pkg/tensorflow-*.whl
