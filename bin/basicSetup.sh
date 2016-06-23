@@ -11,7 +11,6 @@ if grep "Added for Caffe" ~/.bashrc &> /dev/null ||  [ -d $INSTALL_DIR/stow/palm
     exit 1
 fi
     
-exit 0
 
 mkdir -p $INSTALL_DIR/stow/
 cd $INSTALL_DIR/stow/
