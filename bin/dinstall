@@ -162,6 +162,27 @@ process_packages () {
     done
 }
 
+do_list () {
+    pkgs=()
+    for f in $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/*.sh ; do
+        p=$(basename $f)
+        p=${p%.sh}
+        pkgs+=($p)
+    done
+    if [ "$2" = "installed" ]; then
+        installed_pkgs=()
+        for p in "${pkgs[@]}"; do
+            source $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${p}.sh
+            if is_installed_$p ; then
+                installed_pkgs+=($p)
+            fi
+        done
+        echo ${installed_pkgs[@]}
+    else
+        echo ${pkgs[@]}
+    fi
+}
+
 #############################################################################
 # process dinstall arguments: 
 if [ "$#" -lt 1 ]; then
@@ -189,13 +210,17 @@ fi
 case "$1" in
     install|uninstall|upgrade|deploy)
         process_packages $@
-        exit 0
-    ;;
+        ;;
+    list)
+        do_list $@
+        ;;
+    *)
+        # otherwise, assume install command:
+        process_packages install $@
+        ;;
 esac
 
 
-# otherwise, assume install command:
-process_packages install $@
 exit 0
 
 

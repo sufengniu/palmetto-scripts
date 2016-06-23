@@ -10,7 +10,7 @@ dependencies_satisfied_cudnn () {
         echo "Cannot install cudnn while on the user node. try getGPULikeNode first!"
         return 1
     fi
-    require_packages gcc boost
+    require_packages gcc
 }
 
 uninstall_cudnn () {

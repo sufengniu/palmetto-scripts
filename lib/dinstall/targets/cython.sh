@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_cython () {
-    python -c "import cython" &> /dev/null
+    python -m pip show cython &> /dev/null
 }
 
 # will exit with error if dependencies are not met 

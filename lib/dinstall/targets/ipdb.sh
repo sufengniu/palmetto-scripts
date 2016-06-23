@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_ipdb () {
-    python -c "import ipdb"
+    python -m pip show ipdb &> /dev/null
 }
 
 # will exit with error if dependencies are not met 
@@ -10,23 +10,13 @@ dependencies_satisfied_ipdb () {
         echo "Cannot install ipdb while on the user node. try getGPULikeNode first!"
         return 1
     fi
-    require_packages python27
+    require_packages python27 pip
 }
 
 uninstall_ipdb () {
-    echo "TODO"
+    python -m pip uninstall -y ipdb
 }
 
 install_ipdb () {
-    cd $TMPDIR
-    mkdir ipdb; cd ipdb
-
-    wget https://pypi.python.org/packages/source/i/ipdb/ipdb-0.9.0.tar.gz
-    tar xf ipdb-0.9.0.tar.gz
-    cd ipdb-0.9.0
-    python setup.py install --user
-    cd ..
-
-    cd $TMPDIR
-    rm -rf ipdb
+    python -m pip install ipdb
 }

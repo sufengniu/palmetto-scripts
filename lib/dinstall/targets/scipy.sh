@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_scipy () {
-    python -c "import scipy" &> /dev/null
+    python -m pip show scipy &> /dev/null
 }
 
 # will exit with error if dependencies are not met 

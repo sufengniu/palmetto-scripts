@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_numpy () {
-    python -c "import numpy" &> /dev/null
+    python -m pip show numpy &> /dev/null
 }
 
 # will exit with error if dependencies are not met 

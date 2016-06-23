@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_tensorflow () {
-    python -c "import tensorflow" &> /dev/null
+    python -m pip show tensorflow &> /dev/null
 }
 
 # will exit with error if dependencies are not met 

@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_scikit_image () {
-    python -c "import skimage" &> /dev/null
+    python -m pip show scikit-image &> /dev/null
 }
 
 # will exit with error if dependencies are not met 
