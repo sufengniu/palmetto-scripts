@@ -30,11 +30,11 @@ is_stowed () {
 }
 
 is_installed () {
-    if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
+    if [ ! -f $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh ]; then
         echo "Error: is_installed called on $1 which does not exist!"
         return 1
     fi
-    source $INSTALL_DIR/lib/dinstall/targets/${1}.sh
+    source $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh
     is_installed_$1
 }
 
@@ -85,11 +85,11 @@ print_usage () {
 
 # installs a package
 install () {
-    if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
+    if [ ! -f $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh ]; then
         echo "Error: package $1 does not exist!"
         return
     fi
-    source $INSTALL_DIR/lib/dinstall/targets/${1}.sh
+    source $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh
 
     if is_installed_$1 ; then
         echo "Error: package $1 is already installed!"
@@ -116,11 +116,11 @@ install () {
 
 
 uninstall () {
-    if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
+    if [ ! -f $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh ]; then
         echo "Error: package $1 does not exist!"
         return
     fi
-    source $INSTALL_DIR/lib/dinstall/targets/${1}.sh
+    source $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh
     if ! is_installed_$1 ; then
         echo "Error: package $1 is not installed!"
         return
@@ -134,11 +134,11 @@ upgrade () {
 }
 
 deploy () {
-    if [ ! -f $INSTALL_DIR/lib/dinstall/targets/${1}.sh ]; then
+    if [ ! -f $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh ]; then
         echo "Error: package $1 does not exist!"
         return
     fi
-    source $INSTALL_DIR/lib/dinstall/targets/${1}.sh
+    source $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh
     if type -t binary_available_$1 &> /dev/null ; then
         if [ ! -d $binary_path ]; then
             mkdir -p $binary_path

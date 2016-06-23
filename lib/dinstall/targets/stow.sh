@@ -1,6 +1,6 @@
 # returns true if stow is installed
 is_installed_stow () {
-    test -d $INSTALL_DIR/stow
+    test -d $INSTALL_DIR/stow/stow
 }
 
 # will exit with error if dependencies are not met 
