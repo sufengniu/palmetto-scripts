@@ -1,6 +1,6 @@
 # returns true if it is installed
 is_installed_pip () {
-    python -m pip --version
+    python -m pip --version &> /dev/null
 }
 
 # will exit with error if dependencies are not met 
