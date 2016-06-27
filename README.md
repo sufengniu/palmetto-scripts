@@ -29,7 +29,6 @@ python convolutional.py
 
 exit # leave the node
 ```
-Note: the following was added to the palmetto MOTD: "Jobs that request gpus but don't use them may be terminated without notice."  Make sure if you are request a gpu, you actually are using it.  You may want to develop on a local machine and deploy to palmetto once you know it works.
 
 ### Install caffe:
 ```bash
@@ -37,6 +36,27 @@ getGPULikeNode  # get a node for installation purposes
 dinstall caffe_cudnn
 exit # leave the node
 ```
+
+### ***** Notes on GPUs on palmetto:  ******
+
+Note: the following was added to the palmetto MOTD: "Jobs that request gpus but don't use them may be terminated without notice."  Make sure if you are request a gpu, you actually are using it.  You may want to develop on a local machine and deploy to palmetto once you know it works.
+
+Futhermore, every GPU on a node is accessible to your job regardless of whether you request any. Thus, something like tensorflow will detect 2 GPU's and make use of them both even if you only request one.  This is clearly not good since you may interfere with another job.  Make sure you are only using GPU's assigned to you.  If you are requesting a single GPU and want to know what device you were assigned, you can used the following (provided by the palmetto support team):
+
+```bash
+export gpuDev=$(qstat -f $PBS_JOBID | awk '/exec_vnode/ {
+    match($0, /'`hostname`'\[([0-9]+)\]/, grp);
+    print grp[1]
+}')
+```
+
+You can then use the gpuDev enviornment variable in your scripts.  e.g. :
+```bash
+echo "Using GPU: $gpuDev"
+caffe device_query -gpu $gpuDev
+caffe train -solver vehicleDetectorSolver.prototxt -gpu $gpuDev
+```
+
 
 ## Usage:
 
