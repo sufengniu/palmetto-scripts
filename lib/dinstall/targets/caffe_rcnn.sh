@@ -15,7 +15,7 @@ dependencies_satisfied_caffe_rcnn () {
         return 1
     fi
     require_packages gcc cmake python27 numpy scipy opencv leveldb gflags \
-        protobuf glog lmdb snappy boost cudnn scikit_image
+        protobuf glog lmdb snappy boost cudnn scikit_image easydict
 }
 
 uninstall_caffe_rcnn () {
