@@ -48,12 +48,7 @@ require_packages () {
             echo "Package $1 is required! Attempting install..."
             # TODO: fix possible infinite loop with cyclical dependencies
             
-            tmp_ignore_binary=$ignore_binary
-            if [ $ignore_all_binary -eq 0 ]; then
-            	ignore_binary=0
-            fi
-            install $1
-            ignore_binary=$tmp_ignore_binary
+            install --as-dependency $1
             
             if ! is_installed $1 ; then
                 echo "Package $1 is required! Failed to install!"
@@ -99,6 +94,12 @@ print_usage () {
 
 # installs a package
 install () {
+    local ib=$ignore_binary
+    if [ "$1" = "--as-dependency" ]; then
+        ib=$ignore_all_binary
+        shift
+    fi
+
     if [ ! -f $INSTALL_DIR/stow/palmetto-scripts/lib/dinstall/targets/${1}.sh ]; then
         echo "Error: package $1 does not exist!"
         return
@@ -115,7 +116,7 @@ install () {
     fi
 
     # if the binary_available function exists then we check for binary
-    if type -t binary_available_$1 &> /dev/null && [ $ignore_binary -eq 0 ]; then
+    if type -t binary_available_$1 &> /dev/null && [ $ib -eq 0 ]; then
         if binary_available_$1 ; then 
             echo "Installing from binary!"
             binary_install_$1
