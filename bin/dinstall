@@ -10,6 +10,7 @@ cores=${cores:-8}
 
 binary_path=${binary_path:-/scratch2/dndawso/dinstall_binaries}
 ignore_binary=0
+ignore_all_binary=0
 
 
 #############################################################################
@@ -46,7 +47,14 @@ require_packages () {
         if ! is_installed $1 ; then
             echo "Package $1 is required! Attempting install..."
             # TODO: fix possible infinite loop with cyclical dependencies
+            
+            tmp_ignore_binary=$ignore_binary
+            if [ $ignore_all_binary -eq 0 ]; then
+            	ignore_binary=0
+            fi
             install $1
+            ignore_binary=$tmp_ignore_binary
+            
             if ! is_installed $1 ; then
                 echo "Package $1 is required! Failed to install!"
                 return 1
@@ -84,7 +92,8 @@ print_usage () {
     echo -e "options:"
     echo -e "\t--version : return current version and quits"
     echo -e "\t--help : prints this message and quits"
-    echo -e "\t--ignore-binaries : ignores binaries, always installs from source"
+    echo -e "\t--ignore-binaries : ignores binaries, installs thge package from source (but dependencies with binaries)"
+    echo -e "\t--ignore-all-binaries : ignores all binaries, always installs from source"
 }
 
 
@@ -204,8 +213,13 @@ while [ "${1:0:2}" = "--" ]; do
             exit 0
             ;;
         --ignore-binaries)
-            echo "Ignoring binaries!!"
+            echo "Ignoring binaries for this package!!"
             ignore_binary=1
+            ;;
+        --ignore-all-binaries)
+            echo "Ignoring ALL binaries!!"
+            ignore_binary=1
+            ignore_all_binary=1
             ;;
         --help)
             print_usage
