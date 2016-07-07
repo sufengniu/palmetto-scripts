@@ -25,7 +25,6 @@ uninstall_caffe_rcnn () {
 
 install_caffe_rcnn () {
    python -m pip install pyyaml
-   python -m pip install easydict
 
    cd $TMPDIR
 
@@ -86,6 +85,8 @@ binary_deploy_caffe_rcnn () {
     tar -czvf $binary_path/caffe_rcnn.tar.gz caffe py-faster-rcnn
 }
 binary_install_caffe_rcnn () {
+    python -m pip install pyyaml
+
     cd $INSTALL_DIR/stow
     tar -xvf $binary_path/caffe_rcnn.tar.gz
     dostow caffe
