@@ -10,11 +10,12 @@ dependencies_satisfied_protobuf () {
         echo "Cannot install protobuf while on the user node. try getGPULikeNode first!"
         return 1
     fi
-    require_packages gcc gflags
+    require_packages gcc gflags python27 pip
 }
 
 uninstall_protobuf () {
     unstow protobuf
+    python -m pip uninstall -y protobuf
 }
 
 install_protobuf () {
@@ -26,12 +27,32 @@ install_protobuf () {
     make -j$cores
     make install
 
+    cp -r $TMPDIR/protobuf $INSTALL_DIR/stow/protobuf/protobuf-src
+    echo "\\prototbuf-src" >> $INSTALL_DIR/stow/protobuf/.stow-local-ignore
+
     dostow protobuf
 
-    cd $TMPDIR/protobuf/python
+    cd $INSTALL_DIR/stow/protobuf/protobuf-src/python
     python setup.py install --user
 
     cd $TMPDIR
     rm -rf protobuf
 }
+
+binary_deploy_protobuf () {
+    cd $INSTALL_DIR/stow
+    tar -czvf $binary_path/protobuf.tar.gz protobuf
+}
+binary_install_protobuf () {
+    cd $INSTALL_DIR/stow
+    tar -xvf $binary_path/protobuf.tar.gz
+    dostow protobuf
+
+    cd $INSTALL_DIR/stow/protobuf/protobuf-src/python
+    python setup.py install --user
+}
+binary_available_protobuf () {
+    test -f $binary_path/protobuf.tar.gz
+}
+
 
