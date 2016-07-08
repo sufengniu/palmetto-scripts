@@ -28,7 +28,7 @@ install_protobuf () {
     make install
 
     cp -r $TMPDIR/protobuf $INSTALL_DIR/stow/protobuf/protobuf-src
-    echo "\\prototbuf-src" >> $INSTALL_DIR/stow/protobuf/.stow-local-ignore
+    echo "protobuf-src" >> $INSTALL_DIR/stow/protobuf/.stow-local-ignore
 
     dostow protobuf
 
