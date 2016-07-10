@@ -50,7 +50,7 @@ EOF
     export GCC_HOST_COMPILER_PATH=$TMPDIR/tmpbin/gcc
     export TF_CUDA_VERSION=7.5.18
     export CUDA_TOOLKIT_PATH=/software/cuda-toolkit/7.5.18
-    export TF_CUDNN_VERSION=4.0.7
+    export TF_CUDNN_VERSION=5.1
     export CUDNN_INSTALL_PATH=$INSTALL_DIR
     # k40, k20:
     export TF_CUDA_COMPUTE_CAPABILITIES=3.5
