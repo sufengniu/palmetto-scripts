@@ -20,8 +20,8 @@ uninstall_cudnn () {
 install_cudnn () {
     cd $TMPDIR
     mkdir $INSTALL_DIR/stow/cudnn
-    cp /home/wbgreen/cudnn-7.0-linux-x64-v4.0-prod.tgz .
-    tar -xzvf cudnn-7.0-linux-x64-v4.0-prod.tgz
+    cp $HOME/Downloads/cudnn-7.5-linux-x64-v5.1-rc.tgz .
+    tar -xzvf cudnn-7.5-linux-x64-v5.1-rc.tgz
     
     cd cuda
     cp -r * $INSTALL_DIR/stow/cudnn
