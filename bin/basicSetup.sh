@@ -14,7 +14,7 @@ fi
 
 mkdir -p $INSTALL_DIR/stow/
 cd $INSTALL_DIR/stow/
-git clone https://github.com/dougnd/palmetto-scripts.git
+git clone https://github.com/sufengniu/palmetto-scripts.git
 
 
 printf "#Added for Caffe\n\
